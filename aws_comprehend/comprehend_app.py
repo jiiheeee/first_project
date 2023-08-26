@@ -8,7 +8,7 @@ app = FastAPI()
 
 @app. get("/")
 async def main():
-    return "hi"
+    return "main page"
 
 @app.get("/analyze_sentiment/{text}")
 async def analyze_sentiment(text: str):
