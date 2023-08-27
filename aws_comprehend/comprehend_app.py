@@ -1,32 +1,69 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
 import boto3
 import uvicorn
 
 app = FastAPI()
 
+aws_access_key_id = 'aaaa'
+aws_secret_access_key = 'aaaa'
+region_name = 'ap-northeast-2'  # AWS 리전 선택
 
-@app. get("/")
+@app. get('/')
 async def main():
-    return "main page"
+    return "main page`"
 
-@app.get("/analyze_sentiment/{text}")
+# 감정 분석 + 언어 번역
+@app.get('/analyze_sentiment/{text}')
 async def analyze_sentiment(text: str):
 
-    a = text
+    client_text = text
+
+    translate = boto3.client(
+    'translate',
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+    region_name=region_name
+    )
+
+    text_to_translate = client_text
+    source_language_code = "ko"  # 원본 언어 코드 (예: 영어 - en)
+    target_language_code = "en"  # 대상 언어 코드 (예: 프랑스어 - fr)
+
+    result = translate.translate_text(
+        Text=text_to_translate,
+        SourceLanguageCode=source_language_code,
+        TargetLanguageCode=target_language_code
+    )
+
+    translated_text = result['TranslatedText']
+    print("Translated Text:", translated_text)
 
     try:
         comprehend = boto3.client(
             service_name='comprehend', 
             region_name='ap-northeast-2', 
-            aws_access_key_id = "aaaa",
-            aws_secret_access_key = "aaaa"
+            aws_access_key_id = "AKIAUVG62NWBONCNAMHU",
+            aws_secret_access_key = "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"
         )
-        sentiment_result = comprehend.detect_sentiment(Text=a, LanguageCode='ko')
-        return sentiment_result
-    
+        sentiment_result = comprehend.detect_sentiment(Text=translated_text, LanguageCode='en')
+
+        print(sentiment_result)
+
+        sentiment = sentiment_result['Sentiment']
+
+
+        if sentiment == "POSITIVE":
+            return "긍정적인 말을 하시네요."
+        elif sentiment == "NAGATIVE":
+            return "부정적인 말을 하시네요."
+        elif sentiment == "MIXED":
+            return "중성적인 말을 하시네요."
+        else:
+            return "그렇군요"
+
     except Exception as e:
         raise HTTPException(status_code=500, detail = "Error processing sentiment analysis")
+
     
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
