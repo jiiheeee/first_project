@@ -1,8 +1,8 @@
 import boto3
 
 # AWS 자격 증명 및 클라이언트 설정
-aws_access_key_id = 'AKIAUVG62NWBONCNAMHU'
-aws_secret_access_key = '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'
+aws_access_key_id = 'aaaa'
+aws_secret_access_key = 'aaaa'
 region_name = 'ap-northeast-2'  # AWS 리전 선택
 
 translate = boto3.client(
