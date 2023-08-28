@@ -26,8 +26,8 @@ async def analyze_sentiment(text: str):
     )
 
     text_to_translate = client_text
-    source_language_code = "ko"  # 원본 언어 코드 (예: 영어 - en)
-    target_language_code = "en"  # 대상 언어 코드 (예: 프랑스어 - fr)
+    source_language_code = "ko"  
+    target_language_code = "en" 
 
     result = translate.translate_text(
         Text=text_to_translate,
