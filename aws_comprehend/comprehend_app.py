@@ -42,8 +42,8 @@ async def analyze_sentiment(text: str):
         comprehend = boto3.client(
             service_name='comprehend', 
             region_name='ap-northeast-2', 
-            aws_access_key_id = "AKIAUVG62NWBONCNAMHU",
-            aws_secret_access_key = "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"
+            aws_access_key_id = "aaaa",
+            aws_secret_access_key = "aaaa"
         )
         sentiment_result = comprehend.detect_sentiment(Text=translated_text, LanguageCode='en')
 
