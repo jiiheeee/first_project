@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>게임 시작</title>
+</head>
+<!DOCTYPE html>
+<body>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Level</th>
+            <th>Exp</th>
+            <th>Max_exp</th>
+        </tr>
+        {% for row in data %}
+        <tr>
+            <td>{{ row['name'] }}</td>
+            <td>{{ row['level'] }}</td>
+            <td>{{ row['exp'] }}</td>
+            <td>{{ row['max_exp'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
