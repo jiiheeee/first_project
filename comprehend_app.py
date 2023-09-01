@@ -14,6 +14,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from pathlib import Path
 from pydantic import BaseModel
+import boto3
+
 
 app = FastAPI()
 
@@ -39,20 +41,22 @@ def get_image(image_name: str):
     print(1)
     return FileResponse(image_path, media_type='image/jpeg')
 
-
+# """ 메인 페이지 """
 @app.get('/')
 def main_page():
   return FileResponse('main_page.html')
 
+#""" 새로운 모델 만들기 """
 @app.post('/new_model')
 def new_model():
   return FileResponse('new_model.html')
 
+# """ 이름 검색"""
 @app.post('/search')
 def new_model():
   return FileResponse('search.html')
 
-
+#  """새 모델 저장 후 게임 시작"""
 @app.post('/save')
 def save_result(name: str = Form(...)):
     with connection.cursor() as cursor:
@@ -69,15 +73,20 @@ def save_result(name: str = Form(...)):
             
             return RedirectResponse("/game_start?name="+ name, status_code=303)
         
-# 현재 스크립트의 경로를 가져옵니다.
+
+
+
+    # 현재 스크립트의 경로를 가져옵니다.
 current_dir = Path(__file__).resolve().parent
-# 템플릿 폴더를 현재 디렉토리로 설정합니다.
+    # 템플릿 폴더를 현재 디렉토리로 설정합니다.
 templates = Jinja2Templates(directory=current_dir)
 
+# """ 게임 시작 (키우기) """
 @app.get('/game_start', response_class=HTMLResponse)
 def show_game_start(name: str):
     return templates.TemplateResponse("game_start.html", {"request": {"query": name}})
 
+# """ 이름 검색 결과 """
 @app.post('/search_result')
 def search(name: str = Form(...)):
     try:
@@ -95,25 +104,69 @@ def search(name: str = Form(...)):
     3. 그 포인트로 다음 새싹 경험치에 써먹을수있는 쿠폰 드림
 """
 
-# # 감정 분석 + 언어 번역
+#  """ 번역 클라이언트 """
+def create_translate_client():
+    return boto3.client(
+        'translate',
+        region_name='ap-northeast-2',
+        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY')
+    )
+
+#  """ 감정 분석 클라이언트 """
+def create_comprehend_client():
+    return boto3.client(
+        'comprehend',
+        region_name='ap-northeast-2',
+        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY')
+    )
+
+#  """ 대화하기  (번역 + 감정 분석) """
 @app.post('/analyze_sentiment')
-def analyze_sentiment(text: str = Form(...), name: str = Form(...)):
-    text = text
+async def analyze_sentiment(text: str = Form(...)):
 
-    translated_text = language_translate(text)
+    translate = create_translate_client()
+    comprehend = create_comprehend_client()
 
-    auth(comprehend)
-    comprehend = auth(comprehend)
+    client_text = text
+    
+    text_to_translate = client_text
+    source_language_code = "ko"  
+    target_language_code = "en" 
+
+    result = translate.translate_text(
+        Text=text_to_translate,
+        SourceLanguageCode=source_language_code,
+        TargetLanguageCode=target_language_code
+    )
+
+    translated_text = result['TranslatedText']
+    print("Translated Text:", translated_text)
+
     sentiment_result = comprehend.detect_sentiment(Text=translated_text, LanguageCode='en')
 
     print(sentiment_result)
 
     sentiment = sentiment_result['Sentiment']
-    
-    with connection.cursor() as cursor:
-        cursor.execute(f"SELECT * FROM onion WHERE name = %s", (name,))
-        res = cursor.fetchall()
-        print(res)
+
+
+    if sentiment == "POSITIVE":
+        return "긍정적인 말을 하시네요."
+    elif sentiment == "NAGATIVE":
+        return "부정적인 말을 하시네요."
+    elif sentiment == "MIXED":
+        return "중성적인 말을 하시네요."
+    else:
+        return "그렇군요"
+        
+
+
+
+    # with connection.cursor() as cursor:
+    #     cursor.execute(f"SELECT * FROM onion WHERE name = %s", (name,))
+    #     res = cursor.fetchall()
+    #     print(res)
         # if sentiment == "POSITIVE":
         #     exp = sentiment_result['SentimentalScore']["Positive"]
         #     r.exp += exp
