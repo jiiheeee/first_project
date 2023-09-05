@@ -94,7 +94,7 @@ def search(name: str = Form(...)):
             cursor.execute(f"SELECT * FROM onion WHERE name = %s", (name,))
             res = cursor.fetchone()
             if res[0][0]:
-                return res
+                return templates.TemplateResponse("game_start.html", {"request": {"query": name}})
     except:
         return '검색하신 이름이 없습니다.'
 
