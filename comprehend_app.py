@@ -151,31 +151,43 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
     sentiment = sentiment_result['Sentiment']
 
     with connection.cursor() as cursor:
-        cursor.execute(f"SELECT * FROM onion WHERE name = %s", (name,))
-        res = cursor.fetchall()
+        cursor.execute("SELECT * FROM onion WHERE name = %s", (name,))
+        res = cursor.fetchone()
         print(res)
 
-        # res_list = list(res)
+        current_level = int(res[1])
+        current_exp = int(res[2])
 
-        # if sentiment == "POSITIVE":
-        #     res_list[2] += res_list[2]
-        # elif sentiment == "NEGATIVE":
-        #     res_list[2] -= res_list[2]
-        # else:
-        #     exp = 0
-
-        # res = (tuple(res_list),)
+        score = sentiment_result['Sentiment'].capitalize()
         
-        # return res
-    
+
         if sentiment == "POSITIVE":
-            return "긍정적인 말을 하시네요."
-        elif sentiment == "NAGATIVE":
-            return "부정적인 말을 하시네요."
-        elif sentiment == "MIXED":
-            return "중성적인 말을 하시네요."
+            new_exp = current_exp + int(10*sentiment_result['SentimentScore'][f'{score}'])
+        elif sentiment == "NEGATIVE":
+            new_exp = current_exp - int(10*sentiment_result['SentimentScore'][f'{score}'])
+
+        if new_exp >= res[3]:
+            new_level = current_level + 1
+            new_max_exp = 300 * new_level
         else:
-            return "그렇군요"
+            new_level = current_level
+            new_max_exp = res[3]
+
+        cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s WHERE name = %s",
+                       (new_level, new_exp, new_max_exp, name))
+
+        connection.commit()
+
+    return {"name": name, "level": new_level, "exp": new_exp, "max_exp": new_max_exp}
+    
+        # if sentiment == "POSITIVE":
+        #     return "긍정적인 말을 하시네요."
+        # elif sentiment == "NAGATIVE":
+        #     return "부정적인 말을 하시네요."
+        # elif sentiment == "MIXED":
+        #     return "중성적인 말을 하시네요."
+        # else:
+        #     return "그렇군요"
 
        
 
