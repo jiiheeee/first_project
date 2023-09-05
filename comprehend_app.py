@@ -163,6 +163,12 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
 
         if sentiment == "POSITIVE":
             new_exp = current_exp + int(10*sentiment_result['SentimentScore'][f'{score}'])
+            
+        elif sentiment == "NEGATIVE" and current_exp <= 0:
+            cursor.execute(f"delete from onion where name = '{name}'")
+            connection.commit()
+            return f'{name}이 죽었습니다 ㅜ'
+        
         elif sentiment == "NEGATIVE":
             new_exp = current_exp - int(10*sentiment_result['SentimentScore'][f'{score}'])
 
@@ -172,6 +178,8 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
         else:
             new_level = current_level
             new_max_exp = res[3]
+
+        
 
         cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s WHERE name = %s",
                        (new_level, new_exp, new_max_exp, name))
