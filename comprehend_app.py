@@ -124,7 +124,7 @@ def create_comprehend_client():
 
 #  """ 대화하기  (번역 + 감정 분석) """
 @app.post('/analyze_sentiment')
-async def analyze_sentiment(text: str = Form(...)):
+async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
 
     translate = create_translate_client()
     comprehend = create_comprehend_client()
@@ -150,33 +150,32 @@ async def analyze_sentiment(text: str = Form(...)):
 
     sentiment = sentiment_result['Sentiment']
 
+    with connection.cursor() as cursor:
+        cursor.execute(f"SELECT * FROM onion WHERE name = %s", (name,))
+        res = cursor.fetchall()
+        print(res)
 
-    if sentiment == "POSITIVE":
-        return "긍정적인 말을 하시네요."
-    elif sentiment == "NAGATIVE":
-        return "부정적인 말을 하시네요."
-    elif sentiment == "MIXED":
-        return "중성적인 말을 하시네요."
-    else:
-        return "그렇군요"
-        
+        # res_list = list(res)
 
-
-
-    # with connection.cursor() as cursor:
-    #     cursor.execute(f"SELECT * FROM onion WHERE name = %s", (name,))
-    #     res = cursor.fetchall()
-    #     print(res)
         # if sentiment == "POSITIVE":
-        #     exp = sentiment_result['SentimentalScore']["Positive"]
-        #     r.exp += exp
-        # elif sentiment == "NAGATIVE":
-        #     exp = sentiment_result['SentimentalScore']["Negative"]
-        #     x.exp -= exp
-        # else :
+        #     res_list[2] += res_list[2]
+        # elif sentiment == "NEGATIVE":
+        #     res_list[2] -= res_list[2]
+        # else:
         #     exp = 0
+
+        # res = (tuple(res_list),)
+        
+        # return res
     
-    
+        if sentiment == "POSITIVE":
+            return "긍정적인 말을 하시네요."
+        elif sentiment == "NAGATIVE":
+            return "부정적인 말을 하시네요."
+        elif sentiment == "MIXED":
+            return "중성적인 말을 하시네요."
+        else:
+            return "그렇군요"
 
        
 
