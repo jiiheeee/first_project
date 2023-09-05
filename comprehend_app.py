@@ -163,11 +163,10 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
 
         if sentiment == "POSITIVE":
             new_exp = current_exp + int(10*sentiment_result['SentimentScore'][f'{score}'])
-            
+
         elif sentiment == "NEGATIVE" and current_exp <= 0:
             cursor.execute(f"delete from onion where name = '{name}'")
-            connection.commit()
-            return f'{name}이 죽었습니다 ㅜ'
+            return f'GAME OVER ㅜ'
         
         elif sentiment == "NEGATIVE":
             new_exp = current_exp - int(10*sentiment_result['SentimentScore'][f'{score}'])
