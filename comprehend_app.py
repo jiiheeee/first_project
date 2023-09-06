@@ -204,12 +204,12 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
                 
                 elif current_level > 1:
                     if new_exp < 0:
-                        new_max_exp = int(current_max_exp/current_level)
-                        new_exp = new_max_exp - int(10*sentiment_result['SentimentScore'][f'{score}'])
+                        new_max_exp = int(current_max_exp/(3*current_level))
+                        new_exp = new_max_exp - abs((current_exp-int(10*sentiment_result['SentimentScore'][f'{score}'])))
                         new_level = int(current_level - 1)
 
-                        cursor.execute("UPDATE onion SET exp = %s WHERE name = %s",
-                        (new_exp, name))
+                        cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s WHERE name = %s",
+                        (new_level, new_exp, new_max_exp, name))
                         connection.commit()
                         return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": new_level, "exp": new_exp, "max_exp": new_max_exp}})
                 
