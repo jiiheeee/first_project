@@ -4,11 +4,14 @@
     <title>Game Start</title>
 </head>
 <body>
-    <h1>{{ request.query }} 키우기</h1>
+    <h1>{{ request.name }} 키우기</h1>
     <form action="/analyze_sentiment" method="post">
+        <label for="text_input">level: {{ request.level}}</label><br>
+        <label for="text_input">exp: {{ request.exp}}</label><br>
+        <label for="text_input">max_exp: {{ request.max_exp }}</label><br><br>
         <label for="text_input">대화창:</label><br>
         <input type="text" id="text_input" name="text"><br><br>
-        <input type="hidden" name="name" value="{{ request.query }}">
+        <input type="hidden" name="name" value="{{ request.name }}">
         <button type="submit">enter</button>
     </form>
 </body>
