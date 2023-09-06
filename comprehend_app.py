@@ -171,43 +171,64 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
             
 
             if sentiment == "POSITIVE":
+
                 new_exp = current_exp + int(10*sentiment_result['SentimentScore'][f'{score}'])
+
+                if new_exp >= current_max_exp:
+                    new_level = current_level + 1
+                    new_exp = abs(int(current_max_exp - new_exp))
+                    new_max_exp = 300 * new_level 
+                    cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s WHERE name = %s",
+                            (new_level, new_exp, new_max_exp, name))
+                    connection.commit()
+                    return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": new_level, "exp": new_exp, "max_exp": new_max_exp}})
+                
                 cursor.execute("UPDATE onion SET exp = %s WHERE name = %s",
                         (new_exp, name))
                 connection.commit()
+                return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": current_level, "exp": new_exp, "max_exp": current_max_exp}})
 
-            elif sentiment == "NEGATIVE" and sentiment_result['SentimentScore'][f'{score}']:
+            elif sentiment == "NEGATIVE":
                 new_exp = current_exp - int(10*sentiment_result['SentimentScore'][f'{score}'])
                 
             
-                if  current_level == 1 and new_exp <= 0:
-                    cursor.execute(f"delete from onion where name = '{name}'")
-                    return f'GAME OVER ㅜ'
+                if  current_level == 1:
+                    if new_exp <= 0:
+                        cursor.execute(f"delete from onion where name = '{name}'")
+                        return f'GAME OVER ㅜ'
+                    else:
+                       cursor.execute("UPDATE onion SET exp = %s WHERE name = %s",
+                        (new_exp, name))
+                       connection.commit()
+                       return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": current_level, "exp": new_exp, "max_exp": current_max_exp}})
                 
-                elif current_level > 1 and new_exp < 0:
-                    new_max_exp = int(current_max_exp/current_level)
-                    new_exp = new_max_exp - int(10*sentiment_result['SentimentScore'][f'{score}'])
-                    new_level = int(current_level - 1)
-                 
+                elif current_level > 1:
+                    if new_exp < 0:
+                        new_max_exp = int(current_max_exp/current_level)
+                        new_exp = new_max_exp - int(10*sentiment_result['SentimentScore'][f'{score}'])
+                        new_level = int(current_level - 1)
 
+                        cursor.execute("UPDATE onion SET exp = %s WHERE name = %s",
+                        (new_exp, name))
+                        connection.commit()
+                        return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": new_level, "exp": new_exp, "max_exp": new_max_exp}})
+                
+                    elif new_exp >= 0:
+                        cursor.execute("UPDATE onion SET exp = %s WHERE name = %s",
+                        (new_exp, name))
+                        connection.commit()
+                        return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": current_level, "exp": new_exp, "max_exp": current_max_exp}})
             
 
-            if new_exp >= res[3]:
-                new_level = current_level + 1
-                new_max_exp = 300 * new_level 
                
-
-            # cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s WHERE name = %s",
-            #             (new_level, new_exp, new_max_exp, name))
-
-            # connection.commit()
 
             cursor.execute("SELECT * FROM onion WHERE name = %s", (name,))
             model = cursor.fetchone()
             print(model)
 
         return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": new_level, "exp": new_exp, "max_exp": new_max_exp}})
-    except:
+    except Exception as e:
+        print(e)
         return '무슨 말씀인지 모르겠어요 ㅜ'
 
         
