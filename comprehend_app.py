@@ -195,7 +195,9 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
                 if  current_level == 1:
                     if new_exp <= 0:
                         cursor.execute(f"delete from onion where name = '{name}'")
-                        return f'GAME OVER ㅜ'
+                        # return f'GAME OVER ㅜ'
+                        return FileResponse('game_over.html')
+
                     else:
                        cursor.execute("UPDATE onion SET exp = %s WHERE name = %s",
                         (new_exp, name))
