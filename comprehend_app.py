@@ -65,13 +65,12 @@ def save(name: str = Form(...), password: str = Form(...)):
         try:
             cursor.execute(f"INSERT INTO onion (name, level, exp, max_exp, password) VALUES ('{name}', 1, 0, 100, '{password}')")
             connection.commit()    
-            return RedirectResponse("/game_start?name="+ name, status_code=status.HTTP_303_SEE_OTHER)
-        
+            return RedirectResponse(url ="/", status_code=status.HTTP_303_SEE_OTHER)
+
         except Exception as e:
             print(str(e))
             return '에러남 ㅜ'
-
-            
+        
 
 
 
