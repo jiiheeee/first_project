@@ -49,23 +49,26 @@ def new_model():
 
 # """ 이름 검색"""
 @app.post('/search')
-def new_model():
-  return FileResponse('search.html')
+def search():
+  with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM onion")
+        search_list= cursor.fetchone()
+        
+  return templates.TemplateResponse("search.html", {"request": {"search_list": search_list}})
 
 #  """새 모델 저장 후 게임 시작"""
 @app.post('/save')
-def save_result(name: str = Form(...)):
+def save_result(name: str = Form(...), password: str = Form(...)):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM onion WHERE name = %s", (name,))
         existing_record = cursor.fetchone()
+        print(existing_record)
         
         if existing_record:
             return '이미 존재하는 이름입니다.'
         else:
-            cursor.execute(f"INSERT INTO onion (name, level, exp, max_exp) VALUES ('{name}', 1, 0, 100)")
+            cursor.execute(f"INSERT INTO onion (name, level, exp, max_exp, password) VALUES ('{name}', 1, 0, 100, '{password}')")
             connection.commit()
-            cursor.execute(f"select * from onion where name = '{name}'")
-            res = cursor.fetchone()
             
             return RedirectResponse("/game_start?name="+ name, status_code=303)
         
