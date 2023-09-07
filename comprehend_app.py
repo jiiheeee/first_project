@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Form
+from fastapi import FastAPI, Form, status
 import uvicorn
 from dotenv import load_dotenv
 import os
@@ -57,7 +57,7 @@ def login():
 def save(name: str = Form(...), password: str = Form(...)):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM onion WHERE name = %s", (name,))
-        existing_record = cursor.fetchone()
+        existing_record = cursor.fetchall()
         
         if existing_record:
             return '이미 존재하는 이름입니다.'
@@ -65,11 +65,11 @@ def save(name: str = Form(...), password: str = Form(...)):
         try:
             cursor.execute(f"INSERT INTO onion (name, level, exp, max_exp, password) VALUES ('{name}', 1, 0, 100, '{password}')")
             connection.commit()    
-            return RedirectResponse("/game_start?name="+ name, status_code=303)
+            return RedirectResponse("/game_start?name="+ name, status_code=status.HTTP_303_SEE_OTHER)
         
         except Exception as e:
             print(str(e))
-            return '이름과 password를 확인해주세요.'
+            return '에러남 ㅜ'
 
             
 
@@ -93,28 +93,6 @@ def game_start(name: str = Form(...), password: str = Form(...)):
             return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": level, "exp": exp, "max_exp": max_exp}})
         else:
             return '아이디 혹은 비밀번호를 확인해주세요.'
-
-
-
-# """ 이름 검색 결과 및 불러오기"""
-@app.post('/search_result')
-def search(name: str = Form(...)):
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute(f"SELECT * FROM onion WHERE name = %s", (name))
-            res = cursor.fetchone()
-            # level = res[1]
-            # exp = res[2]
-            # max_exp = res[3]
-
-            if res[0][0]:
-                return FileResponse("game_password.html")
-    except:
-        return '검색하신 캐릭터를 찾지 못했습니다. 이름을 확인해주세요.'
-
-
-
-
 
 # """ 이름 검색 결과 및 불러오기"""
 @app.post('/search_result')
