@@ -31,47 +31,47 @@ connection = pymysql.connect(
         password='1234',
         database='mydatabase'
 )
-@app.get('/get_image')
-def get_image(image_name: str):
-    image_path = os.path.join('static', f"{image_name}.jpeg")
-    print(1)
-    return FileResponse(image_path, media_type='image/jpeg')
+# @app.get('/get_image')
+# def get_image(image_name: str):
+#     image_path = os.path.join('static', f"{image_name}.jpeg")
+#     print(1)
+#     return FileResponse(image_path, media_type='image/jpeg')
 
 # """ 메인 페이지 """
 @app.get('/')
 def main_page():
   return FileResponse('main_page.html')
 
-#""" 새로운 캐릭터 만들기 """
-@app.post('/new_model')
-def new_model():
-  return FileResponse('new_model.html')
+#""" 회원가입 """
+@app.post('/sign_up')
+def sign_up():
+    return FileResponse('sign_up.html')
 
-# """ 이름 검색"""
-@app.post('/search')
-def search():
-  with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM onion")
-        search_list= cursor.fetchone()
-        
-  return templates.TemplateResponse("search.html", {"request": {"search_list": search_list}})
+# """ 로그인 """
+@app.post('/login')
+def login():
+  return FileResponse('login.html')
 
-#  """새 모델 저장 후 게임 시작"""
+#  """ 회원가입 후 게임 시작 """
 @app.post('/save')
-def save_result(name: str = Form(...), password: str = Form(...)):
+def save(name: str = Form(...), password: str = Form(...)):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM onion WHERE name = %s", (name,))
         existing_record = cursor.fetchone()
-        print(existing_record)
         
         if existing_record:
             return '이미 존재하는 이름입니다.'
-        else:
+        
+        try:
             cursor.execute(f"INSERT INTO onion (name, level, exp, max_exp, password) VALUES ('{name}', 1, 0, 100, '{password}')")
-            connection.commit()
-            
+            connection.commit()    
             return RedirectResponse("/game_start?name="+ name, status_code=303)
         
+        except Exception as e:
+            print(str(e))
+            return '이름과 password를 확인해주세요.'
+
+            
 
 
 
@@ -81,16 +81,19 @@ current_dir = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=current_dir)
 
 # """ 게임 시작 (키우기) """
-@app.get('/game_start', response_class=HTMLResponse)
-def show_game_start(name: str):
+@app.post('/game_start', response_class=HTMLResponse)
+def game_start(name: str = Form(...), password: str = Form(...)):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM onion WHERE name = %s", (name,))
+        cursor.execute("SELECT * FROM onion WHERE name = %s and password = %s", (name, password))
         res = cursor.fetchone()
-        level = res[1]
-        exp = res[2]
-        max_exp = res[3]
-        
-    return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": level, "exp": exp, "max_exp": max_exp}})
+        if res:
+            level = res[1]
+            exp = res[2]
+            max_exp = res[3]
+            return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": level, "exp": exp, "max_exp": max_exp}})
+        else:
+            return '아이디 혹은 비밀번호를 확인해주세요.'
+
 
 
 # """ 이름 검색 결과 및 불러오기"""
@@ -98,14 +101,34 @@ def show_game_start(name: str):
 def search(name: str = Form(...)):
     try:
         with connection.cursor() as cursor:
-            cursor.execute(f"SELECT * FROM onion WHERE name = %s", (name,))
+            cursor.execute(f"SELECT * FROM onion WHERE name = %s", (name))
             res = cursor.fetchone()
-            level = res[1]
-            exp = res[2]
-            max_exp = res[3]
+            # level = res[1]
+            # exp = res[2]
+            # max_exp = res[3]
 
             if res[0][0]:
-                return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": level, "exp": exp, "max_exp": max_exp}})
+                return FileResponse("game_password.html")
+    except:
+        return '검색하신 캐릭터를 찾지 못했습니다. 이름을 확인해주세요.'
+
+
+
+
+
+# """ 이름 검색 결과 및 불러오기"""
+@app.post('/search_result')
+def search(name: str = Form(...)):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT * FROM onion WHERE name = %s", (name))
+            res = cursor.fetchone()
+            # level = res[1]
+            # exp = res[2]
+            # max_exp = res[3]
+
+            if res[0][0]:
+                return templates.TemplateResponse("game_password.html", {"request": {"name": name, "level": level, "exp": exp, "max_exp": max_exp}})
 
     except:
         return '검색하신 캐릭터를 찾지 못했습니다. 이름을 확인해주세요.'
