@@ -1,7 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>로그인</title>
+    <title>회원 가입</title>
+    <script>
+        function showConfirmationAndSubmit() {
+            alert('회원 가입이 완료되었습니다.');
+            
+            var form = document.createElement("form");
+            form.method = "POST"; 
+            form.action = "/save";
+
+            var nameInput = document.createElement("input");
+            nameInput.type = "hidden";
+            nameInput.name = "name";
+            nameInput.value = document.getElementById("name").value;
+            form.appendChild(nameInput);
+
+            var passwordInput = document.createElement("input");
+            passwordInput.type = "hidden";
+            passwordInput.name = "password";
+            passwordInput.value = document.getElementById("password").value;
+            form.appendChild(passwordInput);
+
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+    </script>
 </head>
 <body>
     <form method="post" action="/save">
@@ -9,7 +34,7 @@
         <input type="text" id="name" name="name"><br><br>
         <label for="password">password:</label>
         <input type="password" id="password" name="password"><br><br>
-        <button type="submit">회원가입</button>
+        <button type="button" onclick="showConfirmationAndSubmit()">회원가입</button>
     </form>
 </body>
 </html>
