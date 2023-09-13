@@ -2,12 +2,62 @@
 <html>
 <head>
     <title>main_page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Handjet&display=swap');
+      </style>
+    <style>
+        /* 화면 가운데 정렬을 위한 스타일 */
+        body, html {
+            height: 100%; /* 화면을 가득 채우도록 높이 100% 설정 */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Handjet', cursive;
+        }
+
+        /* 이미지 스타일링 */
+        img {
+            max-width: 60%; /* 이미지를 화면 너비의 80%로 축소 */
+            height: auto;
+            display: block; /* 이미지를 블록 레벨 요소로 설정하여 가운데 정렬 */
+            margin: 0 auto; /* 이미지를 가로 중앙으로 정렬 */
+        }
+
+        /* 버튼 컨테이너 스타일링 */
+        .button-container {
+            position: relative; /* 상대 위치 설정 */
+            text-align: center;
+            bottom: 130px; /* 버튼을 아래로 이동하여 이미지 중앙 아래에 위치시킴 */
+        }
+
+        /* 버튼 컨테이너 스타일링 */
+        .button-container {
+            position: relative; /* 상대 위치 설정 */
+            text-align: center;
+            bottom: 10px; /* 버튼을 아래로 이동하여 이미지 중앙 아래에 위치시킴 */
+            gap: 10px; /* 버튼 사이의 간격을 조절 */
+        }
+
+        /* 버튼 스타일링 */
+        button {
+            background-color: rgb(255, 137, 12);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Handjet', cursive;
+            font-size: 20px; /* 글씨 크기 조절 */
+        }
+    </style>
 </head>
 <body>
     <form method="post">
-        <button type="submit" formaction="/sign_up">회원가입</button>
-        <button type="submit" formaction="/login">로그인</button>
+    <img src="/static/main_page.jpg" alt="이미지"/>
+    <div class="button-container">
+        <button type="submit" formaction="/sign_up">SIGN UP</button>
+        <button type="submit" formaction="/login">LOGIN</button>
+    </div>
     </form>
 </body>
 </html>
-

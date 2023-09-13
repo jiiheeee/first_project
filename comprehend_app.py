@@ -17,6 +17,9 @@ app = FastAPI()
 
 load_dotenv()
 
+# 정적 파일 디렉토리 경로
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 class SentimentAnalysisInput(BaseModel):
     text: str
 
@@ -25,12 +28,24 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 region_name = 'ap-northeast-2'
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+# ! 이거는 로컬에서 테스트 할때 쓰는거
+# connection = pymysql.connect(
+#     host='localhost',
+#     user='my_user',
+#     password='1234',
+#     database='mydatabase'
+# )
+# ! 이거는 로컬에서 테스트 할때 쓰는거
+
+#? 이거는 도커 컨테이너에서 쓰는거
 connection = pymysql.connect(
-        host='127.0.0.1',
-        user='root',
-        password='1234',
-        database='mydatabase'
+    host='mysql',
+    user='root',
+    password='1234',
+    database='mydatabase'
 )
+#? 이거는 로컬에서 테스트 할때 쓰는거
+
 # @app.get('/get_image')
 # def get_image(image_name: str):
 #     image_path = os.path.join('static', f"{image_name}.jpeg")
@@ -92,23 +107,6 @@ def game_start(name: str = Form(...), password: str = Form(...)):
             return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": level, "exp": exp, "max_exp": max_exp}})
         else:
             return '아이디 혹은 비밀번호를 확인해주세요.'
-
-# """ 이름 검색 결과 및 불러오기"""
-@app.post('/search_result')
-def search(name: str = Form(...)):
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute(f"SELECT * FROM onion WHERE name = %s", (name))
-            res = cursor.fetchone()
-            # level = res[1]
-            # exp = res[2]
-            # max_exp = res[3]
-
-            if res[0][0]:
-                return templates.TemplateResponse("game_password.html", {"request": {"name": name, "level": level, "exp": exp, "max_exp": max_exp}})
-
-    except:
-        return '검색하신 캐릭터를 찾지 못했습니다. 이름을 확인해주세요.'
 
 """
     1. 랜덤으로 새싹키우기 -> 골드까지 키워서 팔기
@@ -198,7 +196,7 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
                 if  current_level == 1:
                     if new_exp <= 0:
                         cursor.execute(f"delete from onion where name = '{name}'")
-                        # return f'GAME OVER ㅜ'
+                        
                         return FileResponse('game_over.html')
 
                     else:
@@ -231,7 +229,7 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
             model = cursor.fetchone()
             print(model)
 
-        return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": new_level, "exp": new_exp, "max_exp": new_max_exp}})
+        return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": new_level, "exp": new_exp, "max_exp": new_max_exp, "sentiment": sentiment}})
     except Exception as e:
         print(e)
         return '무슨 말씀인지 모르겠어요 ㅜ'
