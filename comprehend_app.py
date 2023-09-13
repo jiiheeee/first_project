@@ -28,23 +28,23 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 region_name = 'ap-northeast-2'
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-# ! 이거는 로컬에서 테스트 할때 쓰는거
-# connection = pymysql.connect(
-#     host='localhost',
-#     user='my_user',
-#     password='1234',
-#     database='mydatabase'
-# )
-# ! 이거는 로컬에서 테스트 할때 쓰는거
 
-#? 이거는 도커 컨테이너에서 쓰는거
 connection = pymysql.connect(
-    host='mysql',
-    user='root',
+    host='172.17.0.1',
+    user='my_user',
     password='1234',
     database='mydatabase'
 )
-#? 이거는 로컬에서 테스트 할때 쓰는거
+
+
+# #? 이거는 도커 컨테이너에서 쓰는거
+# connection = pymysql.connect(
+#     host='mysql',
+#     user='root',
+#     password='1234',
+#     database='mydatabase'
+# )
+# #? 이거는 로컬에서 테스트 할때 쓰는거
 
 # @app.get('/get_image')
 # def get_image(image_name: str):
