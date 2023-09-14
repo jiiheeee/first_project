@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>로그인</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Handjet&display=swap');
+      </style>
+    <style>
+        body, html {
+            height: 80%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Handjet', cursive;
+        }
+    </style>
+</head>
+<body>
+    <form method="post" action="/game_start" onsubmit="return validateForm();">
+        <label for="name">name:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="password">password:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <button type="submit">로그인</button>
+    </form>
+    <div id="error-message" style="color: red;"></div> <!-- 메시지를 표시할 공간 -->
+    <script>
+        function validateForm() {
+            var name = document.getElementById("name").value;
+            var password = document.getElementById("password").value;
+            var errorMessage = document.getElementById("error-message");
+
+            if (name === "" || password === "") {
+                errorMessage.textContent = "이름과 비밀번호를 입력해주세요.";
+                return false; // 폼 제출을 막음
+            }
+
+            // 폼이 유효한 경우, 메시지를 초기화하고 제출을 허용
+            errorMessage.textContent = "";
+            return true;
+        }
+    </script>
+</body>
+</html>

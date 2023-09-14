@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>회원 가입</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Handjet&display=swap');
+      </style>
+    <style>
+        body, html {
+            height: 80%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Handjet', cursive;
+        }
+    </style>
+    <script>
+        function showConfirmationAndSubmit() {
+            alert('회원 가입이 완료되었습니다.');
+            
+            var form = document.createElement("form");
+            form.method = "POST"; 
+            form.action = "/save";
+
+            var nameInput = document.createElement("input");
+            nameInput.type = "hidden";
+            nameInput.name = "name";
+            nameInput.value = document.getElementById("name").value;
+            form.appendChild(nameInput);
+
+            var passwordInput = document.createElement("input");
+            passwordInput.type = "hidden";
+            passwordInput.name = "password";
+            passwordInput.value = document.getElementById("password").value;
+            form.appendChild(passwordInput);
+
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+    </script>
+</head>
+<body>
+    <form method="post" action="/save">
+        <label for="name">이름:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="password">password:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <button type="button" onclick="showConfirmationAndSubmit()">회원가입</button>
+    </form>
+</body>
+</html>
