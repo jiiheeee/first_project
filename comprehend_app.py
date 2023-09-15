@@ -17,6 +17,7 @@ app = FastAPI(docs_url="/documentation", redoc_url=None)
 
 load_dotenv()
 
+
 # 정적 파일 디렉토리 경로
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -102,21 +103,21 @@ def game_start(name: str = Form(...), password: str = Form(...)):
 # 대화하기 (번역 + 감정 분석)
 @app.post('/analyze_sentiment')
 async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
-    try:
-        translate_model = create_service_name_client('translate')
-        comprehend_model = create_service_name_client('comprehend')
+    translate_model = create_service_name_client('translate')
+    comprehend_model = create_service_name_client('comprehend')
 
-        source_language_code = "ko"  
-        target_language_code = "en" 
+    source_language_code = "ko"  
+    target_language_code = "en" 
 
-        result = translate_model.translate_text(
-            Text=text,
-            SourceLanguageCode=source_language_code,
-            TargetLanguageCode=target_language_code
-        )
+    result = translate_model.translate_text(
+        Text=text,
+        SourceLanguageCode=source_language_code,
+        TargetLanguageCode=target_language_code
+    )
 
-        translated_text = result['TranslatedText']
+    translated_text = result['TranslatedText']
 
+    if translated_text != text:
         sentiment_result = comprehend_model.detect_sentiment(Text=translated_text, LanguageCode='en')
 
         sentiment = sentiment_result['Sentiment']
@@ -143,7 +144,7 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
                     connection.commit()
                     return templates.TemplateResponse("game_start.html",
                         {"request": {"name": name, "level": level_up_level, "exp": level_up_exp, "max_exp": level_up_max_exp}})
-                
+
                 cursor.execute("UPDATE onion SET exp = %s WHERE name = %s",(new_exp, name))
                 connection.commit()
                 return templates.TemplateResponse("game_start.html",
@@ -174,10 +175,8 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
                 return templates.TemplateResponse("game_start.html",
                     {"request": {"name": name, "level": level, "exp": new_exp, "max_exp": max_exp}})
 
-    except Exception as e:
-        print(e)
-        return '무슨 말씀인지 모르겠어요 ㅜ'
+    elif translated_text == text:
+        return '무슨 말인지 모르겠어요 ㅜㅅㅜ'
 
-        
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
