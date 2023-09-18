@@ -68,7 +68,14 @@
     </style>
 </head>
 <body>
-    <img src="{{ request.image }}" alt="이미지">
+
+    {% if request.sentiment == "POSITIVE" %}
+    <p><img src="/static/happy.gif" alt="Happy Image"></p>
+    {% elif request.sentiment == "NEGATIVE" %}
+    <p><img src="/static/sad.gif" alt="Sad Image"></p>
+    {% else %}
+    <p><img src="{{ request.image }}" alt="Neutral Image"></p>
+    {% endif %}
 
     <!-- Level, Exp, Max Exp를 담는 둥근 네모 박스 -->
     <div class="container">
@@ -80,7 +87,7 @@
 
     <!-- 대화창과 Enter 버튼 -->
     <div class="chat-box">
-        <form action="/analyze_sentiment" method="post">
+        <form action="/analyze_sentiment" method="post" >
             <label for="text_input"></label>
             <input type="text" id="text_input" name="text">
             <input type="hidden" name="name" value="{{ request.name }}">
