@@ -146,13 +146,13 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
                     cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s, image = %s WHERE name = %s",
                         (level_up_level, level_up_exp, level_up_max_exp, level_up_image, name))
                     connection.commit()
-                    return templates.TemplateResponse("game_start.html",
-                        {"request": {"name": name, "level": level_up_level, "exp": level_up_exp, "max_exp": level_up_max_exp, "image":level_up_image}})
+                    return templates.TemplateResponse("sentiment.html",
+                        {"request": {"name": name, "level": level_up_level, "exp": level_up_exp, "max_exp": level_up_max_exp, "image": level_up_image, "sentiment": sentiment}})
 
                 cursor.execute("UPDATE onion SET exp = %s WHERE name = %s",(new_exp, name))
                 connection.commit()
-                return templates.TemplateResponse("game_start.html",
-                    {"request": {"name": name, "level": level, "exp": new_exp, "max_exp": max_exp, "image": image}})
+                return templates.TemplateResponse("sentiment.html",
+                    {"request": {"name": name, "level": level, "exp": new_exp, "max_exp": max_exp, "image": image, "sentiment": sentiment}})
 
             elif sentiment == "NEGATIVE":
                 new_exp = exp - int(100*sentiment_result['SentimentScore'][f'{score}'])
@@ -172,14 +172,14 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
                     cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s, image = %s WHERE name = %s",
                             (relegation_level, relegation_exp, relegation_max_exp, relegation_image, name))
                     connection.commit()
-                    return templates.TemplateResponse("game_start.html",
-                        {"request": {"name": name, "level": relegation_level, "exp": relegation_exp, "max_exp": relegation_max_exp, "image": relegation_image}})
+                    return templates.TemplateResponse("sentiment.html",
+                        {"request": {"name": name, "level": relegation_level, "exp": relegation_exp, "max_exp": relegation_max_exp, "image": relegation_image, "sentiment": sentiment}})
 
                 # 경험치만 차감: 레벨은 동결
                 cursor.execute("UPDATE onion SET exp = %s WHERE name = %s",(new_exp, name))
                 connection.commit()
-                return templates.TemplateResponse("game_start.html",
-                    {"request": {"name": name, "level": level, "exp": new_exp, "max_exp": max_exp, "image": image}})
+                return templates.TemplateResponse("sentiment.html",
+                    {"request": {"name": name, "level": level, "exp": new_exp, "max_exp": max_exp, "image": image, "sentiment": sentiment}})
 
     elif translated_text == text:
         return '무슨 말인지 모르겠어요 ㅜㅅㅜ'
