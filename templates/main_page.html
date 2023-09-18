@@ -3,7 +3,7 @@
 <head>
     <title>main_page</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Handjet&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap');
       </style>
     <style>
         /* 화면 가운데 정렬을 위한 스타일 */
@@ -13,12 +13,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Handjet', cursive;
+            font-family: 'Arvo', serif;
         }
 
         /* 이미지 스타일링 */
         img {
-            max-width: 50%; /* 이미지를 화면 너비의 50%로 축소 */
+            position : relative;
+            max-width: 40%; /* 이미지를 화면 너비의 50%로 축소 */
             height: auto;
             display: block; /* 이미지를 블록 레벨 요소로 설정하여 가운데 정렬 */
             margin: 0 auto; /* 이미지를 가로 중앙으로 정렬 */
@@ -26,35 +27,35 @@
 
         /* 버튼 컨테이너 스타일링 */
         .button-container {
-            position: relative; /* 상대 위치 설정 */
+            position: fixed;
             text-align: center;
             bottom: 260px; /* 버튼을 아래로 이동하여 이미지 중앙 아래에 위치시킴 */
             gap: 50px; /* 버튼 사이의 간격을 조절 */
+            left: 0; /* 왼쪽 맞춤 */
+            right: 0; /* 오른쪽 맞춤 */
         }
 
         /* 버튼 스타일링 */
         .login_button {
             background-color: rgb(255, 137, 12);
-            padding: 10px 20px;
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            font-family: 'Handjet', cursive;
-            font-size: 20px; /* 글씨 크기 조절 */
+            font-family: 'Arvo', serif;
+            font-size: 15px; /* 글씨 크기 조절 */
             width: 90px; /* 버튼의 너비 조절 */
-            height: 40px;
+            height: 35px;
         }
 
         .sign_up_button {
             background-color: rgb(255, 137, 12);
-            padding: 10px 20px;
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            font-family: 'Handjet', cursive;
-            font-size: 20px; /* 글씨 크기 조절 */
+            font-family: 'Arvo', serif;
+            font-size: 15px; /* 글씨 크기 조절 */
             width: 90px; /* 버튼의 너비 조절 */
-            height: 40px;
+            height: 35px;
         }
     </style>
 </head>

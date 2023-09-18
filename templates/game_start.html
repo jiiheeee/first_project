@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Game Start</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Handjet&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&display=swap');
       </style>
     <style>
         /* 화면 가운데 정렬을 위한 스타일 */
@@ -16,7 +16,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            font-family: 'Handjet', cursive;
+            font-family: 'Arvo', serif;
         }
 
         /* 둥근 네모 박스 스타일링 */
@@ -35,7 +35,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-family: 'Handjet', cursive;
+            font-family: 'Arvo', serif;
         }
 
         /* 이미지 크기 조절 */
@@ -84,9 +84,9 @@
 
     <!-- Level, Exp, Max Exp를 담는 둥근 네모 박스 -->
     <div class="container">
-        <h1>name: {{ request.name }}</h1>
-        <label for="text_input">Level: {{ request.level }}</label>
-        <label for="text_input">Exp: {{ request.exp }}</label>
+        <h1>{{ request.name }}</h1>
+        <label for="text_input">Level: {{ request.level }}</label>&nbsp;&nbsp;&nbsp;
+        <label for="text_input">Exp: {{ request.exp }}</label>&nbsp;&nbsp;&nbsp;
         <label for="text_input">Max Exp: {{ request.max_exp }}</label>
     </div>
     
