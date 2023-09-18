@@ -1,12 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>game over</title>
+    <title>game_over</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+      </style>
+    <style>
+        /* 화면 가운데 정렬을 위한 스타일 */
+        body, html {
+            height: 100%; /* 화면을 가득 채우도록 높이 100% 설정 */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        /* 이미지 스타일링 */
+        img {
+            position : relative;
+            max-width: 40%; /* 이미지를 화면 너비의 50%로 축소 */
+            height: auto;
+            display: block; /* 이미지를 블록 레벨 요소로 설정하여 가운데 정렬 */
+            margin: 0 auto; /* 이미지를 가로 중앙으로 정렬 */
+        }
+
+        /* 버튼 컨테이너 스타일링 */
+        .button-container {
+            position: fixed;
+            text-align: center;
+            bottom: 360px; /* 버튼을 아래로 이동하여 이미지 중앙 아래에 위치시킴 */
+            left: 0; /* 왼쪽 맞춤 */
+            right: 0; /* 오른쪽 맞춤 */
+        }
+
+        /* 버튼 스타일링 */
+        .PLAY_AGAIN_button {
+            background-color: rgb(255, 137, 12);
+            /* transparent; 배경 색을 투명으로 설정 */
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;g
+            font-size: 12px; /* 글씨 크기를 12px로 조절 */
+            width: 180px; /* 버튼의 너비 조절 */
+            height: 35px;
+            color: rgb(59, 59, 255); /* 글씨 색을 파란색으로 설정 */
+        }
+
+    </style>
 </head>
 <body>
     <form method="get">
-        <label for="text_input">GAME OVER ㅜ^ㅜ</label><br><br>
-        <button type="submit" formaction="/">다시 시작</button>
+    <img src="/static/game_over.jpg" alt="이미지"/>
+    <div class="button-container">
+        <button type="submit" formaction="/" class="PLAY_AGAIN_button">PLAY AGAIN</button>
+    </div>
     </form>
 </body>
 </html>
