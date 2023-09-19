@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Game Start</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Arvo&display=swap');
       </style>
     <style>
         /* 화면 가운데 정렬을 위한 스타일 */
@@ -29,13 +29,16 @@
         }
 
         /* 버튼 스타일링 */
-        button {
-            background-color: mintcream;
-            padding: 10px 20px;
+        .custom-button {
+            background-color: rgb(255, 137, 12);
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             font-family: 'Arvo', serif;
+            font-size: 18px; /* 버튼 텍스트 크기를 늘립니다. */
+            font-size: 15px; /* 글씨 크기 조절 */
+            width: 90px; /* 버튼의 너비 조절 */
+            height: 35px;
         }
 
         /* 이미지 크기 조절 */
@@ -86,14 +89,14 @@
     </div>
 
     <!-- 대화창과 Enter 버튼 -->
-    <div class="chat-box">
-        <form action="/analyze_sentiment" method="post" >
-            <label for="text_input"></label>
-            <input type="text" id="text_input" name="text">
-            <input type="hidden" name="name" value="{{ request.name }}">
-            <input type="hidden" name="sentiment" value="{{ sentiment }}">
-            <button type="submit">Talk</button>
-        </form>
-    </div>
+    <form action="/analyze_sentiment" method="post" >
+            <div class="chat-box">
+                <label for="text_input"></label>
+                <input type="text" id="text_input" name="text">
+                <input type="hidden" name="name" value="{{ request.name }}">
+                <input type="hidden" name="sentiment" value="{{ sentiment }}">
+            </div>
+            <button type="submit" class="custom-button">Talk</button>
+    </form>
 </body>
 </html>

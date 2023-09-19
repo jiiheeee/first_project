@@ -3,25 +3,80 @@
 <head>
     <title>회원 가입</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Arvo&display=swap');
-      </style>
+        @import url('https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap');
+    </style>
     <style>
+        /* 화면 가운데 정렬을 위한 스타일 */
         body, html {
-            height: 80%;
+            height: 100%;
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
             font-family: 'Arvo', serif;
         }
+
+        /* 이미지 스타일링 */
+        .image-container {
+            height: 100vh; /* 뷰포트 높이로 설정하여 화면 높이에 맞게 꽉 차게 합니다. */
+            background-image: url('/static/sign_up_2.jpg');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 입력 폼 스타일링 */
+        form {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        /* 입력 상자 스타일링 */
+        label {
+            color: #333; /* 라벨 텍스트 색상 변경 */
+        }
+
+        .input-container {
+            margin-top: 380px; /* 입력 상자와 버튼을 아래로 내리는 간격을 조절합니다. */
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 40%;
+            padding: 4px; /* 입력 상자 내부 여백을 늘립니다. */
+            margin: 3px 0; /* 입력 상자 위아래 간격을 조절합니다. */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 20px; /* 입력 상자 텍스트 크기를 늘립니다. */
+        }
+
+        /* 버튼 스타일링 */
+        .button {
+            background-color: rgb(255, 137, 12);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Arvo', serif;
+            font-size: 18px; /* 버튼 텍스트 크기를 늘립니다. */
+            font-size: 15px; /* 글씨 크기 조절 */
+            width: 90px; /* 버튼의 너비 조절 */
+            height: 35px;
+        }
+
+            /* sign_up 버튼을 아래로 내리는 스타일 */
+        .button {
+            margin-top: 30px; /* sign_up 버튼을 아래로 내리는 간격을 조절합니다. */
+        }
+
     </style>
     <script>
         function showConfirmationAndSubmit() {
             alert('회원 가입이 완료되었습니다.');
-            
+
             var form = document.createElement("form");
-            form.method = "POST"; 
+            form.method = "POST";
             form.action = "/save";
 
             var nameInput = document.createElement("input");
@@ -43,12 +98,16 @@
     </script>
 </head>
 <body>
-    <form method="post" action="/save">
-        <label for="name">name:</label>
-        <input type="text" id="name" name="name"><br><br>
-        <label for="password">password:</label>
-        <input type="password" id="password" name="password"><br><br>
-        <button type="button" onclick="showConfirmationAndSubmit()">회원가입</button>
-    </form>
+    <div class="image-container">
+        <form method="post" action="/save">
+            <div class="input-container">
+                <label for="name">name:</label>
+                <input type="text" id="name" name="name"><br>
+                <label for="password">password:</label>
+                <input type="password" id="password" name="password"><br><br>
+            </div>
+            <button type="button" onclick="showConfirmationAndSubmit()" class="button">SIGN UP</button>
+        </form>
+    </div>
 </body>
 </html>

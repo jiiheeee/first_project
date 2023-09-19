@@ -8,21 +8,22 @@
     <style>
         /* 화면 가운데 정렬을 위한 스타일 */
         body, html {
-            height: 100%; /* 화면을 가득 채우도록 높이 100% 설정 */
+            height: 100%;
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             font-family: 'Arvo', serif;
         }
 
         /* 이미지 스타일링 */
-        img {
-            position : relative;
-            max-width: 40%; /* 이미지를 화면 너비의 50%로 축소 */
-            height: auto;
-            display: block; /* 이미지를 블록 레벨 요소로 설정하여 가운데 정렬 */
-            margin: 0 auto; /* 이미지를 가로 중앙으로 정렬 */
+        .image-container {
+            height: 100vh; /* 뷰포트 높이로 설정하여 화면 높이에 맞게 꽉 차게 합니다. */
+            background-image: url('/static/main_page_2.jpg');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         /* 버튼 컨테이너 스타일링 */
@@ -60,11 +61,12 @@
     </style>
 </head>
 <body>
-    <form method="post">
-    <img src="/static/main_page.jpg" alt="이미지"/>
-    <div class="button-container">
-        <button type="submit" formaction="/sign_up" class="sign_up_button">SIGN UP</button>
-        <button type="submit" formaction="/login" class="login_button">LOGIN</button>
+    <div class="image-container">
+        <div class="button-container">
+            <form method="post">
+            <button type="submit" formaction="/sign_up" class="sign_up_button">SIGN UP</button>
+            <button type="submit" formaction="/login" class="login_button">LOGIN</button>
+        </div>
     </div>
     </form>
 </body>

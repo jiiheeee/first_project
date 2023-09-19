@@ -29,13 +29,16 @@
         }
 
         /* 버튼 스타일링 */
-        button {
-            background-color: mintcream;
-            padding: 10px 20px;
+        .custom-button {
+            background-color: rgb(255, 137, 12);
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             font-family: 'Arvo', serif;
+            font-size: 18px; /* 버튼 텍스트 크기를 늘립니다. */
+            font-size: 15px; /* 글씨 크기 조절 */
+            width: 90px; /* 버튼의 너비 조절 */
+            height: 35px;
         }
 
         /* 이미지 크기 조절 */
@@ -49,17 +52,6 @@
         .chat-box {
             text-align: center;
             margin: 10px 0; /* 대화창 위아래 마진 추가 */
-        }
-
-        /* 말풍선 모양의 박스 스타일링 */
-        .speech-bubble {
-            background-color: lightblue;
-            padding: 10px;
-            border-radius: 10px;
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
         }
 
         h1 {
@@ -79,14 +71,14 @@
     </div>
 
     <!-- 대화창과 Enter 버튼 -->
-    <div class="chat-box">
-        <form action="/analyze_sentiment" method="post">
-            <label for="text_input"></label>
-            <input type="text" id="text_input" name="text">
-            <input type="hidden" name="name" value="{{ request.name }}">
-            <input type="hidden" name="sentiment" value="{{ sentiment }}">
-            <button type="submit">Talk</button>
-        </form>
-    </div>
+    <form action="/analyze_sentiment" method="post">
+            <div class="chat-box">
+                <label for="text_input"></label>
+                <input type="text" id="text_input" name="text">
+                <input type="hidden" name="name" value="{{ request.name }}">
+                <input type="hidden" name="sentiment" value="{{ sentiment }}">
+            </div>
+        <button type="submit" class="custom-button">Talk</button>
+    </form>
 </body>
 </html>
