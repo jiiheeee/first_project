@@ -77,7 +77,7 @@ def save(name: str = Form(...), password: str = Form(...)):
         if onion:
             return '이미 존재하는 이름입니다.'
         try:
-            cursor.execute(f"INSERT INTO onion (name, level, exp, max_exp, password, image) VALUES ('{name}', 1, 0, 150, '{password}', '/static/game_start.gif')")
+            cursor.execute(f"INSERT INTO onion (name, level, exp, max_exp, password, image, PN, NN) VALUES ('{name}', 1, 0, 150, '{password}', '/static/game_start.gif', 0, 0)")
             connection.commit()    
             return RedirectResponse(url ="/", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -121,8 +121,8 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
 
     if translated_text != text:
         sentiment_result = comprehend_model.detect_sentiment(Text=translated_text, LanguageCode='en')
-
         sentiment = sentiment_result['Sentiment']
+
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM onion WHERE name = %s", (name,))
             res = cursor.fetchone()
@@ -131,32 +131,37 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
             exp = int(res[2])
             max_exp = int(res[3])
             image = res[5]
+            positive_number = int(res[6])
+            negative_number = int(res[7])
 
             score = sentiment_result['Sentiment'].capitalize()
 
             if sentiment == "POSITIVE":
                 new_exp = exp + int(100*sentiment_result['SentimentScore'][f'{score}'])
+                current_image = f'/static/level_{level}'
+                update_PN = positive_number + 1
 
                 # level up
                 if new_exp >= max_exp:
                     level_up_level = level + 1
-                    level_up_image = f'/static/level_{level_up_level}.gif'
+                    level_up_image = f'/static/level_{level_up_level}'
                     level_up_exp = int(new_exp - max_exp)
                     level_up_max_exp = 150 * level_up_level
-                    cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s, image = %s WHERE name = %s",
-                        (level_up_level, level_up_exp, level_up_max_exp, level_up_image, name))
+                    cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s, image = %s, PN = %s WHERE name = %s",
+                        (level_up_level, level_up_exp, level_up_max_exp, level_up_image, update_PN, name))
                     connection.commit()
                     return templates.TemplateResponse("sentiment.html",
                         {"request": {"name": name, "level": level_up_level, "exp": level_up_exp, "max_exp": level_up_max_exp, "image": level_up_image, "sentiment": sentiment}})
 
-                cursor.execute("UPDATE onion SET exp = %s WHERE name = %s",(new_exp, name))
+                cursor.execute("UPDATE onion SET exp = %s, image = %s, PN = %s WHERE name = %s",(new_exp, current_image, update_PN, name))
                 connection.commit()
                 return templates.TemplateResponse("sentiment.html",
-                    {"request": {"name": name, "level": level, "exp": new_exp, "max_exp": max_exp, "image": image, "sentiment": sentiment}})
+                    {"request": {"name": name, "level": level, "exp": new_exp, "max_exp": max_exp, "image": current_image, "sentiment": sentiment}})
 
             elif sentiment == "NEGATIVE":
                 new_exp = exp - int(100*sentiment_result['SentimentScore'][f'{score}'])
-                
+                current_image = f'/static/level_{level}'
+                update_NN = negative_number + 1
 
                 # game over: 레벨 1 일때 경험치가 마이너스 되면 game over 후 DB에서 삭제
                 if level == 1 and new_exp < 0:
@@ -168,21 +173,32 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
                     relegation_max_exp = int(max_exp-150)
                     relegation_exp = relegation_max_exp - abs((exp-int(100*sentiment_result['SentimentScore'][f'{score}'])))
                     relegation_level = int(level - 1)
-                    relegation_image = f'/static/level_{relegation_level}.jpg'
-                    cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s, image = %s WHERE name = %s",
-                            (relegation_level, relegation_exp, relegation_max_exp, relegation_image, name))
+                    relegation_image = f'/static/level_{relegation_level}'
+                    cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s, image = %s, NN = %s WHERE name = %s",
+                            (relegation_level, relegation_exp, relegation_max_exp, relegation_image, update_NN, name))
                     connection.commit()
                     return templates.TemplateResponse("sentiment.html",
                         {"request": {"name": name, "level": relegation_level, "exp": relegation_exp, "max_exp": relegation_max_exp, "image": relegation_image, "sentiment": sentiment}})
 
                 # 경험치만 차감: 레벨은 동결
-                cursor.execute("UPDATE onion SET exp = %s WHERE name = %s",(new_exp, name))
+                cursor.execute("UPDATE onion SET exp = %s, image = %s, NN = %s WHERE name = %s",(new_exp, current_image, update_NN, name))
                 connection.commit()
                 return templates.TemplateResponse("sentiment.html",
-                    {"request": {"name": name, "level": level, "exp": new_exp, "max_exp": max_exp, "image": image, "sentiment": sentiment}})
+                    {"request": {"name": name, "level": level, "exp": new_exp, "max_exp": max_exp, "image": current_image, "sentiment": sentiment}})
 
     elif translated_text == text:
-        return '무슨 말인지 모르겠어요 ㅜㅅㅜ'
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM onion WHERE name = %s", (name))
+                res = cursor.fetchone()
+
+                level = int(res[1])
+                exp = int(res[2])
+                image = f'{res[5]}.jpg'
+                max_exp = int(res[3])
+
+            return templates.TemplateResponse("sentiment.html", {"request": {"name": name, "level": level, "image": image, "exp": exp, "max_exp": max_exp}})
+
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
