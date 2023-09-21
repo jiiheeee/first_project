@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Game Start</title>
+    <title>sentiment</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap');
     </style>
@@ -10,8 +10,8 @@
         /* 화면 가운데 정렬을 위한 스타일 */
         
         body, html {
-            height: 80%;
-            margin: 0;
+            height: 75%;
+            margin: 30;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,6 +26,7 @@
             border-radius: 10px;
             text-align: center;
             font-size: 18px; /* 글씨 크기 조절 */
+            margin-top: -100px
         }
 
         /* 버튼 스타일링 */
@@ -43,30 +44,31 @@
 
         /* 이미지 크기 조절 */
         img {
-            width: 300px;
+            width: 450px;
             height: auto;
-            margin: 10px 0; /* 이미지 위아래 마진 추가 */
+            margin: 150px 10px 10px; /* 이미지 위아래 마진 추가 */
         }
 
         /* 대화창 스타일링 */
         .chat-box {
             text-align: center;
-            margin: 10px 0; /* 대화창 위아래 마진 추가 */
-        }
-
-        /* 말풍선 모양의 박스 스타일링 */
-        .speech-bubble {
-            background-color: lightblue;
-            padding: 10px;
-            border-radius: 10px;
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
+            margin: 20px 0; /*대화창 위아래 마진 추가*/
         }
 
         h1 {
             font-size: 20px; /* 원하는 크기로 조절 */
+        }
+
+        /* 오류 메시지 컨테이너 스타일링 */
+        #error-message {
+            position: absolute; /* 절대 위치 설정 */
+            top: 77%; /* 이미지 상단에서 75% 아래로 위치 */
+            left: 50%; /* 이미지 왼쪽에서 50% 오른쪽으로 위치 */
+            transform: translate(-50%, -50%); /* 중앙 정렬 */
+            padding: 10px; /* 내부 여백 조절 */
+            border-radius: 5px;
+            color: rgb(130, 2, 2);
+            z-index: 1; /* 다른 요소보다 위에 표시되도록 설정 */
         }
     </style>
 </head>
@@ -81,7 +83,7 @@
     {% elif request.sentiment == "NEGATIVE" %}
     <p><img src="{{ request.image }}_sad.gif" alt="Sad Image"></p>
     {% else %}
-    <p><img src="{{ request.image }}" alt="Neutral Image"></p>
+    <p><img src="{{ request.image }}_mixed.jpg" alt="Basic Image"></p>
     {% endif %}
 
 
@@ -93,15 +95,32 @@
         <label for="text_input">Max Exp: {{ request.max_exp }}</label>
     </div>
 
-    <!-- 대화창과 Enter 버튼 -->
-    <form action="/analyze_sentiment" method="post" >
-            <div class="chat-box">
-                <label for="text_input"></label>
-                <input type="text" id="text_input" name="text">
-                <input type="hidden" name="name" value="{{ request.name }}">
-                <input type="hidden" name="sentiment" value="{{ sentiment }}">
-            </div>
-            <button type="submit" class="custom-button">Talk</button>
+<!-- 대화창과 Enter 버튼 -->
+<div class="chat-box">
+    <form action="/analyze_sentiment" method="post" onsubmit="return validateForm();">
+        <label for="text_input"></label>
+        <input type="text" id="text_input" name="text">
+        <input type="hidden" name="name" value="{{ request.name }}">
+        <input type="hidden" name="sentiment" value="{{ sentiment }}">
+        <button type="submit" class="custom-button">Talk</button>
     </form>
+</div>
+
+<div id="error-message"></div> <!-- 메시지를 표시할 공간 -->
+<script>
+    function validateForm() {
+        var text = document.getElementById("text_input").value;
+        var errorMessage = document.getElementById("error-message");
+        
+        if (text === "") {
+            errorMessage.textContent = "대화창을 채워주세요.";
+            return false; // 폼 제출을 막음
+        }
+        // 폼이 유효한 경우, 메시지를 초기화하고 제출을 허용
+        errorMessage.textContent = "";
+        return true;
+    }
+</script>
+
 </body>
 </html>

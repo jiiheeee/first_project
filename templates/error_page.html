@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>error_page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap');
+      </style>
+    <style>
+        /* 화면 가운데 정렬을 위한 스타일 */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arvo', serif;
+        }
+
+        /* 이미지 스타일링 */
+        .image-container {
+            height: 100vh; /* 뷰포트 높이로 설정하여 화면 높이에 맞게 꽉 차게 합니다. */
+            background-image: url('/static/error.jpg');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 버튼 컨테이너 스타일링 */
+        .button-container {
+            position: fixed;
+            text-align: center;
+            bottom: 260px; /* 버튼을 아래로 이동하여 이미지 중앙 아래에 위치시킴 */
+            gap: 50px; /* 버튼 사이의 간격을 조절 */
+            left: 0; /* 왼쪽 맞춤 */
+            right: 0; /* 오른쪽 맞춤 */
+        }
+
+        /* 버튼 스타일링 */
+        .main_page_button {
+            background-color: rgb(255, 137, 12);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Arvo', serif;
+            font-size: 15px; /* 글씨 크기 조절 */
+            width: 90px; /* 버튼의 너비 조절 */
+            height: 35px;
+        }
+
+        .BACK_button {
+            background-color: rgb(255, 137, 12);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Arvo', serif;
+            font-size: 15px; /* 글씨 크기 조절 */
+            width: 90px; /* 버튼의 너비 조절 */
+            height: 35px;
+        }
+    </style>
+</head>
+<body>
+    <div class="image-container">
+        <div class="button-container">
+            <form method="get">
+            <button type="submit" formaction="/" class="main_page_button">Home</button>
+            <button onclick="history.back()" class="BACK_button">Back</button>
+        </div>
+    </div>
+    </form>
+</body>
+</html>
