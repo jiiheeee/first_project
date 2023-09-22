@@ -52,6 +52,15 @@ def create_service_name_client(service_name):
         aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY')
     )
 
+#미들웨어 등록
+@app.middleware("http")
+async def custon_middleware(request: Request, call_next):
+    if request.url.path not in ('/', '/sign_up', '/login', '/save', '/game_start', '/analyze_sentiment'):
+        return templates.TemplateResponse("error_page.html", {"request": {"message": "에러"}})
+    
+    response = await call_next(request)
+    return response
+
 # 메인 페이지
 @app.get('/')
 def main_page(request:Request):
