@@ -8,6 +8,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+# from starlette.responses import TemplateResponse
 import boto3
 
 # 템플릿 폴더를 현재 디렉토리로 설정합니다.
@@ -41,7 +42,7 @@ connection = pymysql.connect(
 #     password='1234',
 #     database='mydatabase'
 # )
-# #? 이거는 로컬에서 테스트 할때 쓰는거
+# #? 이거는 도커에서 테스트 할때 쓰는거
 
 # 클라이언트
 def create_service_name_client(service_name):
@@ -52,14 +53,22 @@ def create_service_name_client(service_name):
         aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY')
     )
 
-#미들웨어 등록
-@app.middleware("http")
-async def custon_middleware(request: Request, call_next):
-    if request.url.path not in ('/', '/sign_up', '/login', '/save', '/game_start', '/analyze_sentiment'):
-        return templates.TemplateResponse("error_page.html", {"request": {"message": "에러"}})
+# #미들웨어 등록
+# @app.middleware("http")
+# async def custom_middleware(request: Request, call_next):
+#     my_url_list = [
+#         '/', 
+#         '/sign_up', 
+#         '/login', 
+#         '/save', 
+#         '/game_start', 
+#         '/analyze_sentiment'
+#     ]
+#     if request.url.path not in my_url_list:
+#         return templates("custom_error.html", {"request": request}, status_code=400)
     
-    response = await call_next(request)
-    return response
+#     response = await call_next(request)
+#     return response
 
 # 메인 페이지
 @app.get('/')
@@ -116,7 +125,6 @@ def game_start(name: str = Form(...), password: str = Form(...)):
         elif res == None:
             return templates.TemplateResponse("login_1.html", {"request": {"name": name, "password": password, "res": res}})
 
-
 # 대화하기 (번역 + 감정 분석)
 @app.post('/analyze_sentiment')
 async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
@@ -158,16 +166,19 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
                     update_PN = positive_number + 1
 
                     # level up
-                    if new_exp >= max_exp:
+                    if level <= 4 and new_exp >= max_exp:
                         level_up_level = level + 1
                         level_up_image = f'/static/level_{level_up_level}'
                         level_up_exp = int(new_exp - max_exp)
                         level_up_max_exp = 150 * level_up_level
-                        cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s, image = %s, PN = %s WHERE name = %s",
-                            (level_up_level, level_up_exp, level_up_max_exp, level_up_image, update_PN, name))
-                        connection.commit()
-                        return templates.TemplateResponse("sentiment.html",
-                            {"request": {"name": name, "level": level_up_level, "exp": level_up_exp, "max_exp": level_up_max_exp, "image": level_up_image, "sentiment": sentiment}})
+                        if level_up_level <= 4:
+                            cursor.execute("UPDATE onion SET level = %s, exp = %s, max_exp = %s, image = %s, PN = %s WHERE name = %s",
+                                (level_up_level, level_up_exp, level_up_max_exp, level_up_image, update_PN, name))
+                            connection.commit()
+                            return templates.TemplateResponse("sentiment.html",
+                                {"request":{"name": name, "level": level_up_level, "exp": level_up_exp, "max_exp": level_up_max_exp, "image": level_up_image, "sentiment": sentiment}})
+                        elif level_up_level >= 5:
+                            return templates.TemplateResponse("ending.html", {"request":{"PN": update_PN}})
 
                     cursor.execute("UPDATE onion SET exp = %s, image = %s, PN = %s WHERE name = %s",(new_exp, current_image, update_PN, name))
                     connection.commit()
@@ -216,7 +227,6 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
                     max_exp = int(res[3])
 
                 return templates.TemplateResponse("sentiment.html", {"request": {"name": name, "level": level, "image": image, "exp": exp, "max_exp": max_exp}})
-
 
     except Exception as e:
         print(f"An error occurred: {str(e)}")
