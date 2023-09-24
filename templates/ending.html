@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ending</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap');
+      </style>
+    <style>
+        /* 화면 가운데 정렬을 위한 스타일 */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arvo', serif;
+        }
+        /* 이미지 크기 조절 및 가운데 정렬 */
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            bottom: 160px;
+        }
+        /* 이미지 크기 조절 */
+        img {
+            width: 700px;
+            height: auto;
+            margin: 5px 10px 10px; /* 이미지 위아래 마진 추가 */
+        }
+
+        /* 버튼 컨테이너 스타일링 */
+        .button-container {
+            position: fixed;
+            text-align: center;
+            bottom: 160px; /* 버튼을 아래로 이동하여 이미지 중앙 아래에 위치시킴 */
+            gap: 50px; /* 버튼 사이의 간격을 조절 */
+            left: 0; /* 왼쪽 맞춤 */
+            right: 0; /* 오른쪽 맞춤 */
+        }
+
+        /* 버튼 컨테이너 스타일링 */
+        .button-container {
+            text-align: center;
+            margin-top: 800px; /* 버튼과 이미지 간 간격을 조절하여 버튼을 아래로 내립니다. */
+        }
+
+        /* 버튼 스타일링 */
+        .HOME_button {
+            background-color: rgb(255, 137, 12);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Arvo', serif;
+            font-size: 15px; /* 글씨 크기 조절 */
+            width: 90px; /* 버튼의 너비 조절 */
+            height: 35px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="image-container">
+        {% if 10 <= request.PN < 20 %}
+        <p><img src="/static/ending_1.gif" alt="ending_1"></p>
+        {% elif 20 <= request.PN < 30 %}
+        <p><img src="/static/ending_2.gif" alt="ending_2"></p>
+        {% elif 30 <= request.PN < 40 %}
+        <p><img src="/static/ending_3.gif" alt="ending_3"></p>
+        {% else %}
+        <p><img src="/static/ending_4.gif" alt="ending_4"></p>
+        {% endif %}
+
+        <div class="button-container">
+            <form method="get">
+            <button type="submit" formaction="/" class="HOME_button">HOME</button>
+        </div>
+    </div>
+    </form>
+</body>
+</html>
