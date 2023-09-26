@@ -10,6 +10,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 # from starlette.responses import TemplateResponse
 import boto3
+from fastapi.responses import JSONResponse
 
 # 템플릿 폴더를 현재 디렉토리로 설정합니다.
 templates = Jinja2Templates(directory='templates')
@@ -93,15 +94,19 @@ def save(name: str = Form(...), password: str = Form(...)):
         onion = cursor.fetchall()
         
         if onion:
-            return '이미 존재하는 이름입니다.'
+            message = "이미 존재하는 이름입니다."
+            return JSONResponse(content={"message": message}, status_code=400)
         try:
             cursor.execute(f"INSERT INTO onion (name, level, exp, max_exp, password, image, PN, NN) VALUES ('{name}', 1, 0, 150, '{password}', '/static/game_start_2.gif', 0, 0)")
             connection.commit()    
             return RedirectResponse(url ="/", status_code=status.HTTP_303_SEE_OTHER)
 
         except Exception as e:
-            print(str(e))
-            return '에러남 ㅜ'
+            print(f"An error occurred: {str(e)}")
+            return templates.TemplateResponse(
+                "error_page.html",
+                {"request":{"error_message": "An error occurred"}}  # "request" 키를 추가
+    )
 
 # 게임 시작 (키우기)
 @app.post('/game_start', response_class=HTMLResponse)
