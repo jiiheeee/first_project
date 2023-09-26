@@ -83,31 +83,6 @@
         }
 
     </style>
-    <script>
-        function showConfirmationAndSubmit() {
-            alert('회원 가입이 완료되었습니다.');
-            
-            var form = document.createElement("form");
-            form.method = "POST";
-            form.action = "/save";
-            
-            var nameInput = document.createElement("input");
-            nameInput.type = "hidden";
-            nameInput.name = "name";
-            nameInput.value = document.getElementById("name").value;
-            form.appendChild(nameInput);
-            
-            var passwordInput = document.createElement("input");
-            passwordInput.type = "hidden";
-            passwordInput.name = "password";
-            passwordInput.value = document.getElementById("password").value;
-            form.appendChild(passwordInput);
-            
-            document.body.appendChild(form);
-            
-            form.submit();
-        }
-        </script>
         <script>
            async function showConfirmationAndSubmit() {
                var name = document.getElementById("name").value;
