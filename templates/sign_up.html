@@ -70,32 +70,83 @@
             margin-top: 30px; /* sign_up 버튼을 아래로 내리는 간격을 조절합니다. */
         }
 
+        /* 오류 메시지 컨테이너 스타일링 */
+        #error-message {
+            position: absolute; /* 절대 위치 설정 */
+            top: 75%; /* 이미지 상단에서 75% 아래로 위치 */
+            left: 50%; /* 이미지 왼쪽에서 50% 오른쪽으로 위치 */
+            transform: translate(-50%, -50%); /* 중앙 정렬 */
+            padding: 10px; /* 내부 여백 조절 */
+            border-radius: 5px;
+            color: rgb(130, 2, 2);
+            z-index: 1; /* 다른 요소보다 위에 표시되도록 설정 */
+        }
+
     </style>
     <script>
         function showConfirmationAndSubmit() {
             alert('회원 가입이 완료되었습니다.');
-
+            
             var form = document.createElement("form");
             form.method = "POST";
             form.action = "/save";
-
+            
             var nameInput = document.createElement("input");
             nameInput.type = "hidden";
             nameInput.name = "name";
             nameInput.value = document.getElementById("name").value;
             form.appendChild(nameInput);
-
+            
             var passwordInput = document.createElement("input");
             passwordInput.type = "hidden";
             passwordInput.name = "password";
             passwordInput.value = document.getElementById("password").value;
             form.appendChild(passwordInput);
-
+            
             document.body.appendChild(form);
-
+            
             form.submit();
         }
-    </script>
+        </script>
+        <script>
+           async function showConfirmationAndSubmit() {
+               var name = document.getElementById("name").value;
+               var password = document.getElementById("password").value;
+               var errorMessage = document.getElementById("error-message");
+               
+                if (name === "" || password === "") {
+                    errorMessage.textContent = "이름과 비밀번호를 입력해주세요.";
+                    return false; // 폼 제출을 막음
+                } else {
+                    errorMessage.textContent = "";
+                }
+                
+                // 서버로 데이터를 전송
+                const response = await fetch('/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ name, password }).toString(),
+                });
+
+                if (response.status === 200) {
+                    alert('회원 가입이 완료되었습니다.');
+                    window.location.href = '/'; // 메인 화면으로 리디렉션
+                } else {
+                    const responseData = await response.json(); // JSON 응답 데이터를 파싱
+                    const errorMessage = responseData.message;
+
+                    if (errorMessage) {
+                        alert(errorMessage);
+                    } else {
+                        alert('회원 가입에 실패하였습니다. 이름과 비밀번호를 다시 입력해주세요.');
+                        document.getElementById("name").value = "";
+                        document.getElementById("password").value = "";
+                    }
+                } 
+            }
+       </script>
 </head>
 <body>
     <div class="image-container">
@@ -109,5 +160,7 @@
             <button type="button" onclick="showConfirmationAndSubmit()" class="button">SIGN UP</button>
         </form>
     </div>
+
+    <div id="error-message"></div> <!-- 메시지를 표시할 공간 -->
 </body>
 </html>
