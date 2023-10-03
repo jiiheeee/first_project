@@ -97,9 +97,9 @@ def save(name: str = Form(...), password: str = Form(...)):
             message = "이미 존재하는 이름입니다."
             return JSONResponse(content={"message": message}, status_code=400)
         try:
-            for data in name:
-                if data == "'":
-                    error_message = "이름 중 '는 사용할 수 없습니다."
+            for name_data, password_data in zip(name, password):
+                if name_data == "'" or password_data == "'":
+                    error_message = "이름과 비밀전호 중 작은따옴표 및 큰따옴표는 사용할 수 없습니다."
                     return JSONResponse(content={"message": error_message}, status_code=400)
             cursor.execute(f"INSERT INTO onion (name, level, exp, max_exp, password, image, PN, NN) VALUES ('{name}', 1, 0, 150, '{password}', '/static/game_start_2.gif', 0, 0)")
             connection.commit()    
