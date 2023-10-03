@@ -83,7 +83,11 @@
     {% elif request.sentiment == "NEGATIVE" %}
     <p><img src="{{ request.image }}_sad.gif" alt="Sad Image"></p>
     {% else %}
-    <p><img src="{{ request.image }}_mixed.jpg" alt="Basic Image"></p>
+        {% if request.level == 1 and request.exp == 0 %}
+        <p><img src="/static/level_1_mixed.jpg" alt="Other Image"></p>
+        {% else %}
+        <p><img src="{{ request.image }}_mixed.jpg" alt="Basic Image"></p>
+        {% endif %}
     {% endif %}
 
 
