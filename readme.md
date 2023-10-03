@@ -2,8 +2,8 @@
 
 <img alt="game_start image" src="https://github.com/jiiheeee/first_project/assets/128598772/cc8cdc7a-4e3f-44fd-84f5-b02ec0dba596" width="50%">
 
-<img src="https://github.com/jiiheeee/first_project/assets/128598772/e0ca220d-4ad5-47b6-a970-b58fdd3b68d2"/>
-![python](https://github.com/jiiheeee/first_project/assets/128598772/e0ca220d-4ad5-47b6-a970-b58fdd3b68d2)
+<img src="https://github.com/jiiheeee/first_project/assets/128598772/e0ca220d-4ad5-47b6-a970-b58fdd3b68d2" width="10%">
+
 대화창에 문장을 입력하면 AWS Translate API를 사용하여 해당 문장을 영어로 번역하고, AWS Comprehend API를 사용하여 문장의 감정(긍정 또는 부정)을 분석하는 웹 게임입니다. 이 게임에서는 사용자가 양파라는 캐릭터를 육성하며, 특정 경험치에 도달하면 레벨이 증가합니다.
 
 ## 개요
