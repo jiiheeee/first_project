@@ -1,7 +1,7 @@
 # 양파 육성 웹 게임
 
 <p align="center">
-<img alt="game_start image" src="https://github.com/jiiheeee/first_project/assets/128598772/5c3a3c85-f721-4302-87c7-8e66cb2a7956" width="50%">
+  <img alt="game_start image" src="https://github.com/jiiheeee/first_project/assets/128598772/5c3a3c85-f721-4302-87c7-8e66cb2a7956" width="50%">
 </p>
 
 양파 캐릭터를 생성하여 칭찬을 통한 양파 육성 웹 게임입니다. 대화창에 문장을 입력하면 AWS Translate API를 사용하여 해당 문장을 영어로 번역하고, AWS Comprehend API를 사용하여 문장의 감정(긍정 또는 부정)을 분석합니다. 이 게임에서는 사용자가 양파라는 캐릭터를 육성하며, 특정 경험치에 도달하면 레벨이 증가합니다.
@@ -21,12 +21,15 @@
 이 게임을 즐기려면 다음 단계를 따르세요:
 
 <p align="center">
-<img alt="sign_up_image" src="https://github.com/jiiheeee/first_project/assets/128598772/b05796ad-d722-4d97-aeb8-f8c3dae3ddc3"
-width="30%">
+  <img alt="sign_up_image" src="https://github.com/jiiheeee/first_project/assets/128598772/b05796ad-d722-4d97-aeb8-f8c3dae3ddc3"
+  width="30%">
 </p>
 
 1. **회원가입**: 게임을 시작하려면 먼저 회원가입을 해야 합니다. 홈페이지에서 회원가입 양식을 작성하고 계정을 생성하세요.
-
+<p align="center">
+  <img alt="login" src="https://github.com/jiiheeee/first_project/assets/128598772/fb6f1d88-1044-4f4c-aa4f-16257475185f"
+    width="30%">
+</p>
 2. **양파 생성(로그인)**: 회원가입이 완료되면 생성된 계정으로 로그인하세요. 생성된 양파 캐릭터는 초기 레벨 1에서 시작합니다.
 
 3. **게임 시작**: 생성된 양파 캐릭터에게 칭찬을 해주세요. 칭찬을 하면 양파 캐릭터의 경험치가 증가합니다.
