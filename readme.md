@@ -24,8 +24,7 @@
 <p align="center">
   <img alt="sign_up_image" src="https://github.com/jiiheeee/first_project/assets/128598772/b05796ad-d722-4d97-aeb8-f8c3dae3ddc3"
   width="30%">
-</p>
-1. **회원가입**: 게임을 시작하려면 먼저 회원가입을 해야 합니다. 홈페이지에서 회원가입 양식을 작성하고 계정을 생성하세요.
+1. **회원가입**: 게임을 시작하려면 먼저 회원가입을 해야 합니다. 홈페이지에서 회원가입 양식을 작성하고 계정을 생성하세요.</p>
 <p align="center">
   <img alt="login" src="https://github.com/jiiheeee/first_project/assets/128598772/fb6f1d88-1044-4f4c-aa4f-16257475185f"
     width="30%">
