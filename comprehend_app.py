@@ -101,7 +101,7 @@ def save(name: str = Form(...), password: str = Form(...)):
                 if name_data == "'" or password_data == "'":
                     error_message = "이름과 비밀전호 중 작은따옴표('') 및 큰따옴표(\"\")는 사용할 수 없습니다."
                     return JSONResponse(content={"message": error_message}, status_code=400)
-            cursor.execute(f"INSERT INTO onion (name, level, exp, max_exp, password, image, PN, NN) VALUES ('{name}', 1, 0, 150, '{password}', '/static/game_start_2.gif', 0, 0)")
+            cursor.execute(f"INSERT INTO onion (name, level, exp, max_exp, password, image, PN, NN) VALUES ('{name}', 1, 0, 150, '{password}', '/static/level_1', 0, 0)")
             connection.commit()    
             return RedirectResponse(url ="/", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -119,18 +119,23 @@ def game_start(name: str = Form(...), password: str = Form(...)):
         cursor.execute("SELECT * FROM onion WHERE name = %s and password = %s", (name, password))
         res = cursor.fetchone()
 
-        if res and res[2] == 0:
+        #회원가입 후 처음 대화할 때#
+        # if res and res[2] == 0:
+        #     level = res[1]
+        #     exp = res[2]
+        #     max_exp = res[3]
+        #     image = res[5]
+        #     return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": level, "exp": exp, "max_exp": max_exp, "image": image}})
+        
+        #기존 데이터 불러오기#
+        if res:
             level = res[1]
             exp = res[2]
             max_exp = res[3]
             image = res[5]
             return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": level, "exp": exp, "max_exp": max_exp, "image": image}})
-        elif res:
-            level = res[1]
-            exp = res[2]
-            max_exp = res[3]
-            image = f'{res[5]}.jpg'
-            return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": level, "exp": exp, "max_exp": max_exp, "image": image}})
+        
+        #DB에 데이터가 없을 경우#
         elif res == None:
             return templates.TemplateResponse("login_1.html", {"request": {"name": name, "password": password, "res": res}})
 
