@@ -1,6 +1,8 @@
 # 양파 육성 웹 게임
 
+<p align="center">
 <img alt="game_start image" src="https://github.com/jiiheeee/first_project/assets/128598772/cc8cdc7a-4e3f-44fd-84f5-b02ec0dba596" width="50%">
+</p>
 
 양파 캐릭터를 생성하여 칭찬을 통한 양파 육성 웹 게임입니다. 대화창에 문장을 입력하면 AWS Translate API를 사용하여 해당 문장을 영어로 번역하고, AWS Comprehend API를 사용하여 문장의 감정(긍정 또는 부정)을 분석합니다. 이 게임에서는 사용자가 양파라는 캐릭터를 육성하며, 특정 경험치에 도달하면 레벨이 증가합니다.
 
