@@ -73,7 +73,11 @@
     </style>
 </head>
 <body>
-    <img src="{{ request.image }}" alt="이미지">
+    {% if request.level == 1 and request.exp == 0 %}
+    <p><img src="/static/level_1_start.gif" alt="game_start"></p>
+    {% else %}
+    <p><img src="{{ request.image }}.jpg" alt="게임 불러오기"></p>
+    {% endif %}
 
     <!-- Level, Exp, Max Exp를 담는 둥근 네모 박스 -->
     <div class="container">
