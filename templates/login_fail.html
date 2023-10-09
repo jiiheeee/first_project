@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>error_page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap');
+    </style>
+    <style>
+        /* 화면 가운데 정렬을 위한 스타일 */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arvo', serif;
+        }
+
+        /* 이미지 스타일링 */
+        .image-container {
+            height: 100vh;
+            background-image: url('/static/error_page.jpg');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 에러 메시지 스타일링 */
+        #error-message {
+            margin-top: -140px; /* 글씨를 위로 올리는 부분입니다. */
+            font-size: 14px;
+        }
+
+        /* 버튼 컨테이너 스타일링 */
+        .button-container {
+            position: fixed;
+            text-align: center;
+            bottom: 420px;
+            left: 0;
+            right: 0;;
+        }
+
+        /* 버튼 스타일링 */
+        .login_button {
+            background-color: rgb(255, 137, 12);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Arvo', serif;
+            font-size: 15px;
+            width: 90px;
+            height: 35px;;
+        }
+    </style>
+</head>
+<body>
+    <div class="image-container">
+        <!-- 에러 메시지 표시 -->
+        <div id="error-message">
+            {% if error_message %}
+            <p style="color: rgb(0, 0, 0);">{{ error_message }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <!-- 버튼 컨테이너 -->
+    <div class="button-container">
+        <form method="post">
+            <button type="submit" formaction="/login" class="login_button">Enter</button>
+        </form>
+    </div>
+</body>
+</html>
