@@ -82,9 +82,15 @@ def sign_up(request:Request):
   return templates.TemplateResponse("sign_up.html", {'request':request})
 
 # 로그인
+
 @app.post('/login')
 def login(request:Request):
   return templates.TemplateResponse("login.html", {'request':request})
+
+@app.get('/login/fail')
+def login_fail(request:Request):
+    error_message = 'Please check your name and password'
+    return templates.TemplateResponse("login_fail.html", {'request':request, 'error_message':error_message})
 
 # 회원가입 후 게임 시작
 @app.post('/save')
@@ -119,14 +125,6 @@ def game_start(name: str = Form(...), password: str = Form(...)):
         cursor.execute("SELECT * FROM onion WHERE name = %s and password = %s", (name, password))
         res = cursor.fetchone()
 
-        #회원가입 후 처음 대화할 때#
-        # if res and res[2] == 0:
-        #     level = res[1]
-        #     exp = res[2]
-        #     max_exp = res[3]
-        #     image = res[5]
-        #     return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": level, "exp": exp, "max_exp": max_exp, "image": image}})
-        
         #기존 데이터 불러오기#
         if res:
             level = res[1]
@@ -137,7 +135,7 @@ def game_start(name: str = Form(...), password: str = Form(...)):
         
         #DB에 데이터가 없을 경우#
         elif res == None:
-            return templates.TemplateResponse("login_1.html", {"request": {"name": name, "password": password, "res": res}})
+            return RedirectResponse(url ="/login/fail", status_code=status.HTTP_303_SEE_OTHER)
 
 # 대화하기 (번역 + 감정 분석)
 @app.post('/analyze_sentiment')
