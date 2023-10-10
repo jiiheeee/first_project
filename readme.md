@@ -52,10 +52,10 @@
 
 프로젝트에서 사용된 주요 라이브러리 및 프레임워크는 다음과 같습니다:
 
-- Python 3.10 <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white">
-- FastAPI 0.103.0 <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=FastAPI&logoColor=white">
+- Programming: <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white">  3.10 
+- Framwork: <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=FastAPI&logoColor=white">  0.103.0 
 - Amazon AWS <img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=for-the-badge&logo=Amazon AWS&logoColor=white">
-- PyMySQL 1.1.0 <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
+- PyMySQL <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">  1.1.0 
 - Uvicorn 0.23.2
 
 ## 설치 및 실행
