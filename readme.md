@@ -62,7 +62,7 @@
 ## 설치 및 실행
 
 프로젝트를 실행하려면 오른쪽 링크를 눌러주세요.
-[SUPERION, BADION](http://ec2-13-125-213-223.ap-northeast-2.compute.amazonaws.com:8000/)
+[SUPERION, BADION](http://ec2-3-36-70-35.ap-northeast-2.compute.amazonaws.com:8000/)
 
 ## 라이선스
 
