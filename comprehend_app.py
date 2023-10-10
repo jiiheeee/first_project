@@ -130,7 +130,8 @@ def game_start(name: str = Form(...), password: str = Form(...)):
             level = res[1]
             exp = res[2]
             max_exp = res[3]
-            image = res[5]
+            image = res[4]
+            print(res)
             return templates.TemplateResponse("game_start.html", {"request": {"name": name, "level": level, "exp": exp, "max_exp": max_exp, "image": image}})
         
         #DB에 데이터가 없을 경우#
@@ -166,7 +167,7 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
                 level = int(res[1])
                 exp = int(res[2])
                 max_exp = int(res[3])
-                image = res[5]
+                image = res[4]
                 positive_number = int(res[6])
                 negative_number = int(res[7])
 
