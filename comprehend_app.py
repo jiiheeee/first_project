@@ -54,23 +54,6 @@ def create_service_name_client(service_name):
         aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY')
     )
 
-# #미들웨어 등록
-# @app.middleware("http")
-# async def custom_middleware(request: Request, call_next):
-#     my_url_list = [
-#         '/', 
-#         '/sign_up', 
-#         '/login', 
-#         '/save', 
-#         '/game_start', 
-#         '/analyze_sentiment'
-#     ]
-#     if request.url.path not in my_url_list:
-#         return templates("custom_error.html", {"request": request}, status_code=400)
-    
-#     response = await call_next(request)
-#     return response
-
 # 메인 페이지
 @app.get('/')
 def main_page(request:Request):
@@ -155,7 +138,7 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
         )
 
         translated_text = result['TranslatedText']
-
+        print(translated_text)
         if translated_text != text:
             sentiment_result = comprehend_model.detect_sentiment(Text=translated_text, LanguageCode='en')
             sentiment = sentiment_result['Sentiment']
