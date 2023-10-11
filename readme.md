@@ -15,6 +15,7 @@
 - 번역된 영어 문장을 AWS Comprehend API를 사용하여 감정 분석을 수행합니다.
 - 감정 분석 결과에 따라 경험치를 조절하고 양파 캐릭터를 성장시킵니다.
 - 특정 경험치에 도달하면 레벨이 증가하며, 양파 캐릭터가 더 성장합니다.
+- 게임 오버되면 양파는 자동으로 삭제됩니다.
 
 ## 게임 방법
 
@@ -61,7 +62,7 @@
 ## 설치 및 실행
 
 프로젝트를 실행하려면 오른쪽 링크를 눌러주세요.
-[SUPERION, BADION](http://ec2-13-125-213-223.ap-northeast-2.compute.amazonaws.com:8000/)
+[SUPERION, BADION](http://ec2-3-36-70-35.ap-northeast-2.compute.amazonaws.com:8000/)
 
 ## 라이선스
 
