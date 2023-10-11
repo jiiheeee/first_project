@@ -138,7 +138,6 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
         )
 
         translated_text = result['TranslatedText']
-        print(translated_text)
         if translated_text != text:
             sentiment_result = comprehend_model.detect_sentiment(Text=translated_text, LanguageCode='en')
             sentiment = sentiment_result['Sentiment']
@@ -189,6 +188,8 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
                     # game over: 레벨 1 일때 경험치가 마이너스 되면 game over 후 DB에서 삭제
                     if level == 1 and new_exp < 0:
                         cursor.execute(f"delete from onion where name = '{name}'")
+                        connection.commit()
+
                         return templates.TemplateResponse('game_over.html', {"request":{}})
 
                     # 강등: 현재 레벨 - 1하고 마이너스된 만큼 경험치 차감
@@ -219,7 +220,7 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
 
                     level = int(res[1])
                     exp = int(res[2])
-                    image = res[5]
+                    image = res[4]
                     max_exp = int(res[3])
 
                 return templates.TemplateResponse("sentiment.html", {"request": {"name": name, "level": level, "image": image, "exp": exp, "max_exp": max_exp}})
@@ -230,9 +231,6 @@ async def analyze_sentiment(text: str = Form(...), name:str = Form(...)):
             "error_page.html",
             {"request":{"error_message": "An error occurred"}}  # "request" 키를 추가
     )
-
-
-
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
